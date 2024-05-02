@@ -11,7 +11,7 @@ def main():
     parser = argparse.ArgumentParser(description="SQL Injection scanner.")
     parser.add_argument('-f', '--file', help='File containing URLs to test')
     parser.add_argument('-u', '--url', help='Single URL to test')
-    parser.add_argument('-t', '--threads', type=int, default=10, help='Number of threads to use (max 1000)', choices=range(1, 1001))
+    parser.add_argument('-t', '--threads', type=int, default=10, help='Number of threads to use (max 1000)')
     parser.add_argument('-o', '--output', help='Output file to save results')
 
     args = parser.parse_args()
@@ -43,8 +43,8 @@ def scan_url(url, payloads, sql_errors, output_file=None):
         try:
             response = requests.get(full_url)
             if any(error in response.text for error in sql_errors):
-                result = f"{Fore.LIGHTMAGENTA_EX}[{Fore.LIGHTGREEN_EX}VULNERABLE{Style.RESET_ALL}{Fore.LIGHTMAGENTA_EX}]{Style.RESET_ALL} {Fore.CYAN}{full_url}{Style.RESET_ALL} {Fore.YELLOW}|{Style.RESET_ALL} {Fore.LIGHTMAGENTA_EX}[{Style.RESET_ALL}{get_color(response.status_code)}{response.status_code}{Fore.LIGHTMAGENTA_EX}]{Style.RESET_ALL}"
-                results.append(result)
+                result = f"{Fore.LIGHTMAGENTA_EX}[{Fore.LIGHTGREEN_EX}VULNERABLE{Style.RESET_ALL}{Fore.LIGHTMAGENTA_EX}]{Style.RESET_ALL} {Fore.WHITE}{full_url}{Style.RESET_ALL} {Fore.YELLOW}|{Style.RESET_ALL} {Fore.LIGHTMAGENTA_EX}[{Style.RESET_ALL}{get_color(response.status_code)}{response.status_code}{Fore.LIGHTMAGENTA_EX}]{Style.RESET_ALL}"
+                results.append(full_url)
                 print(result)
                 positive_found = True
                 break
@@ -53,12 +53,13 @@ def scan_url(url, payloads, sql_errors, output_file=None):
 
     if not positive_found:
         response = requests.get(url)
-        result = f"{Fore.LIGHTMAGENTA_EX}[{Fore.YELLOW}NOT VULNERABLE{Style.RESET_ALL}{Fore.LIGHTMAGENTA_EX}]{Style.RESET_ALL} {Fore.CYAN}{url}{Style.RESET_ALL} {Fore.YELLOW}|{Style.RESET_ALL} {Fore.LIGHTMAGENTA_EX}[{Style.RESET_ALL}{get_color(response.status_code)}{response.status_code}{Fore.LIGHTMAGENTA_EX}]{Style.RESET_ALL}"
-        results.append(result)
+        result = f"{Fore.LIGHTMAGENTA_EX}[{Fore.YELLOW}NOT VULNERABLE{Style.RESET_ALL}{Fore.LIGHTMAGENTA_EX}]{Style.RESET_ALL} {Fore.WHITE}{url}{Style.RESET_ALL} {Fore.YELLOW}|{Style.RESET_ALL} {Fore.LIGHTMAGENTA_EX}[{Style.RESET_ALL}{get_color(response.status_code)}{response.status_code}{Fore.LIGHTMAGENTA_EX}]{Style.RESET_ALL}"
+        results.append(url)
         print(result)
 
-    if output_file:
+    if output_file and positive_found:
         save_results(results, output_file)
+
 
 def save_results(results, file_path):
     with open(file_path, 'a') as file:
