@@ -8,6 +8,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 init(autoreset=True)
 
 def main():
+    print("""
+     ___  ___  _    _   ___               
+    / __|/ _ \| |  (_) / __| __ __ _ _ _  
+    \__ \ (_) | |__| | \__ \/ _/ _` | ' \ 
+    |___/\__\_\____|_| |___/\__\__,_|_||_|
+           CODED BY @wh0l5th3r00t | SQLi Scan v1.0                            
+    """)
     parser = argparse.ArgumentParser(description="SQL Injection scanner.")
     parser.add_argument('-f', '--file', help='File containing URLs to test')
     parser.add_argument('-u', '--url', help='Single URL to test')
